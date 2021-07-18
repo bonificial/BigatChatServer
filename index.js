@@ -15,17 +15,17 @@ io.on("connection", (socket) => {
     socket.emit("me",  socket.id);
 
     socket.on("disconnect", () => {
-        socket.broadcast.emit("callEnded")
+        socket.broadcast.emit("socket disconnected", socket.id)
     })
 
-    socket.on("callUser", (data) => {
-       console.log('Incming call with data ', {...data,signalData:{}})
+    socket.on("message", (data) => {
+       console.log('New Message with Data ', data)
         io.to(socket.id).emit('callResponse', 'call response initiated');
-        io.to(data.userToCall).emit("callUser", { signal: data.signalData, from: data.from, name: data.name })
+
     })
-    socket.on("answerCall", (data) => {
-        io.to(data.to).emit("callAccepted", data.signal)
-    })
+
 })
 
 server.listen(process.env.PORT || 5000, () => console.log("server is running on port 5000"))
+
+//git add . && git commit -m "Update" && git push origin master
